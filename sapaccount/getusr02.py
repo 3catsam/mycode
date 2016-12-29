@@ -55,53 +55,55 @@ for i in sys_id:
     # get data from sap.usr02 for limited users
     itab_usr02x = sap_conn.read_table('USR02', options=[
         "USTYP eq 'A' and GLTGB gt '%s'" % today], fields=['BNAME', 'GLTGV', 'GLTGB', 'USTYP',
-                                                           'ANAME', 'ERDAT', 'TRDAT', 'LTIME'], max_rows=9999)
+                                                           'ANAME', 'ERDAT', 'TRDAT', \
+                                                           'LTIME'], max_rows=9999)
 
     # close saprfc
     sap_conn.close()
     # input data to mysql.SAPAccountAudit
     # unlimited users:
+    #
     for l in itab_usr02:
-        cur.execute("insert into `BH_RSI_Repository`.`SAPAccountAudit` (`usercode`,`valid_from`,`Valid_to`,\
+        cur.execute("insert into `test`.`SAPAccountAudit` (`usercode`,`valid_from`,`Valid_to`,\
 `type`,`creator`,`create_on`,`Last_logon_d`,`Last_logon_t`,`inputdate`,`sid`) values ('%(BNAME)s','%(GLTGV)s',\
     '%(GLTGB)s','%(USTYP)s','%(ANAME)s','%(ERDAT)s','%(TRDAT)s','%(LTIME)s'," % l + "'%s','%s')" % (today, i))
     # limited users:
     for l in itab_usr02x:
-        cur.execute("insert into `BH_RSI_Repository`.`SAPAccountAudit` (`usercode`,`valid_from`,`Valid_to`,\
+        cur.execute("insert into `test`.`SAPAccountAudit` (`usercode`,`valid_from`,`Valid_to`,\
 `type`,`creator`,`create_on`,`Last_logon_d`,`Last_logon_t`,`inputdate`,`sid`) values ('%(BNAME)s','%(GLTGV)s',\
     '%(GLTGB)s','%(USTYP)s','%(ANAME)s','%(ERDAT)s','%(TRDAT)s','%(LTIME)s'," % l + "'%s','%s')" % (today, i))
 # update new data(inputdate==today):
 # islogon means active user
 # update flag islogon=true when lastlogon is not null or create date less
 # than 90 days.
-cur.execute("UPDATE `BH_RSI_Repository`.`SAPAccountAudit` SET islogon = TRUE WHERE inputdate = '%s' \
+cur.execute("UPDATE `test`.`SAPAccountAudit` SET islogon = TRUE WHERE inputdate = '%s' \
 AND `Last_logon_d` <> '0000-00-00' OR DATEDIFF(inputdate, create_on) <= 90" % today)
 # update diffdays = 1 when create date less than 90 days and haven't logoned system.
 # we should make sure it's a vilid user.
-cur.execute("UPDATE `BH_RSI_Repository`.`SAPAccountAudit` SET diffdays = 1 WHERE inputdate = '%s' AND \
+cur.execute("UPDATE `test`.`SAPAccountAudit` SET diffdays = 1 WHERE inputdate = '%s' AND \
 islogon = TRUE AND `Last_logon_d` = '0000-00-00'" % today)
 # set invalid users' diffdays = 100.
-cur.execute("UPDATE `BH_RSI_Repository`.`SAPAccountAudit` SET diffdays = 100 WHERE inputdate = '%s' AND \
+cur.execute("UPDATE `test`.`SAPAccountAudit` SET diffdays = 100 WHERE inputdate = '%s' AND \
 islogon = FALSE" % today)
 # count vilid users' diffdays.WARN:'1' and '100' are special value.
-cur.execute("UPDATE `BH_RSI_Repository`.`SAPAccountAudit` SET diffdays = DATEDIFF(inputdate, Last_logon_d) \
+cur.execute("UPDATE `test`.`SAPAccountAudit` SET diffdays = DATEDIFF(inputdate, Last_logon_d) \
 WHERE inputdate = '%s' AND islogon = TRUE AND `Last_logon_d` <> '0000-00-00'" % today)
 # update users' corp_name,user_name from ODM,only newly inputed data.
 # update corp_name of AGT where sid = P91
-cur.execute("UPDATE `BH_RSI_Repository`.`SAPAccountAudit` SET `CORP_NAME` = 'AGT' WHERE sid = 'P91' AND \
+cur.execute("UPDATE `test`.`SAPAccountAudit` SET `CORP_NAME` = 'AGT' WHERE sid = 'P91' AND \
 inputdate = '%s'" % today)
-cur.execute("UPDATE `BH_RSI_Repository`.`SAPAccountAudit` a INNER JOIN `BH_RSI_Repository`.`ODM` b \
+cur.execute("UPDATE `test`.`SAPAccountAudit` a INNER JOIN `BH_RSI_Repository`.`ODM` b \
 ON a.`usercode`=b.`USER_CODE` SET a.`CORP_NAME` = b.`CORP_NAME` where a.inputdate = '%s' and b.`CORP_NAME`\
 IS NOT NULL" % today)
-cur.execute("UPDATE `BH_RSI_Repository`.`SAPAccountAudit` a INNER JOIN `BH_RSI_Repository`.`ODM` b \
+cur.execute("UPDATE `test`.`SAPAccountAudit` a INNER JOIN `BH_RSI_Repository`.`ODM` b \
 ON a.`usercode`=b.`USER_CODE` SET a.`USER_NAME` = b.`USER_NAME` where a.inputdate = '%s' and b.`USER_NAME` \
 IS NOT NULL" % today)
 # refresh the active users
-cur.execute("INSERT INTO `BH_RSI_Repository`.`tmp_SAPAccountAudit`(`usercode`,`mindiffdays`) SELECT `usercode`,\
-MIN(`diffdays`) FROM `BH_RSI_Repository`.`SAPAccountAudit` WHERE `inputdate` = '%s' GROUP BY `usercode`" % today)
-cur.execute("UPDATE `BH_RSI_Repository`.`SAPAccountAudit` a INNER JOIN `BH_RSI_Repository`.`tmp_SAPAccountAudit` b \
+cur.execute("INSERT INTO `test`.`tmp_SAPAccountAudit`(`usercode`,`mindiffdays`) SELECT `usercode`,\
+MIN(`diffdays`) FROM `test`.`SAPAccountAudit` WHERE `inputdate` = '%s' GROUP BY `usercode`" % today)
+cur.execute("UPDATE `test`.`SAPAccountAudit` a INNER JOIN `test`.`tmp_SAPAccountAudit` b \
 ON a.`usercode`= b.`usercode` SET a.`diffdays`=b.`mindiffdays` WHERE a.`inputdate` = '%s'" % today)
-cur.execute("TRUNCATE TABLE `BH_RSI_Repository`.`tmp_SAPAccountAudit`")
+cur.execute("TRUNCATE TABLE `test`.`tmp_SAPAccountAudit`")
 cur.close()
 conn.commit()
 conn.close()
