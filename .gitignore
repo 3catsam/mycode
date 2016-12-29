@@ -89,4 +89,4 @@ ENV/
 .ropeproject
 
 # Configuration
-.ini
+*.ini
