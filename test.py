@@ -6,7 +6,7 @@ def cur_file_dir():
          return path
      elif os.path.isfile(path):
          return os.path.dirname(path)
-
+# test code
 base_dir=cur_file_dir()
 print base_dir
 try:
