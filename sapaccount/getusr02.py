@@ -35,7 +35,7 @@ conn = MySQLdb.connect(
     host='10.0.1.105',
     port=5029,
     user='root',
-    passwd='nprd2013!',
+    passwd='test!',
     db='BH_RSI_Repository',
 )
 # Loops of all SAP SID
