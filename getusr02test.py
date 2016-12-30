@@ -83,6 +83,6 @@ for l in itab_usr02:
 results=cur.fetchall()
 for res in results:
     print res[0]'''
-cur.close()
+cur.close() 
 conn.commit()
 conn.close()
