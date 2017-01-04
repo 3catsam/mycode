@@ -11,6 +11,7 @@ import sys
 import os
 import MySQLdb
 import datetime
+from mysqlconn import conn
 
 
 #sys_id = ['EP1', 'P11','P31','P41','P91']
@@ -31,13 +32,13 @@ def cur_file_dir():
 base_dir = cur_file_dir()
 
 # connection parameter to MySQL
-conn = MySQLdb.connect(
+'''conn = MySQLdb.connect(
     host='10.0.1.105',
     port=5029,
     user='root',
     passwd='test!',
     db='BH_RSI_Repository',
-)
+)'''
 # Loops of all SAP SID
 for i in sys_id:
     sap_conn = pysap.Rfc_connection(

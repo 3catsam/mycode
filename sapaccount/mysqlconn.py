@@ -1,4 +1,4 @@
-import MySQLdb
+'''import MySQLdb
 
 
 
@@ -8,5 +8,18 @@ conn = MySQLdb.connect(
     port=5029,
     user='test',
     passwd='test!',
-    db='BH_RSI_Repository',
+    db='test',
+)
+'''
+import pymysql.cursors
+ 
+# Connect to the database
+conn = pymysql.connect(
+    host='10.0.1.105',                         
+    port=5029,
+    user='test',
+    password='test!',
+    db='test',
+    charset='gbk',
+    cursorclass=pymysql.cursors.DictCursor
 )
