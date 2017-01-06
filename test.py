@@ -1,4 +1,4 @@
-import sys,os,pysap
+import sys,os
 import ctypes as c
 def cur_file_dir():
      path = sys.path[0]
@@ -14,3 +14,4 @@ try:
     print librfc
 except Exception:
     print '%s' % Exception
+
