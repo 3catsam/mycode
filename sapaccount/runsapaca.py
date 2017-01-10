@@ -18,8 +18,7 @@ app = Flask(__name__)
     {
         'id': 2,
         'title': u'Learn Python',
-        'descr
-        iption': u'Need to find a good Python tutorial on the web',
+        'description': u'Need to find a good Python tutorial on the web',
         'done': False
     }
 ]
@@ -61,7 +60,7 @@ from ((select inputdate,corp_name,count(*) as countIdle from SAPAccountAudit a \
 where a.`diffdays` > 30 and a.inputdate='%s' group by a.`CORP_NAME`) as idle,\
 (select inputdate,corp_name,count(*) as countAll from SAPAccountAudit a \
 where a.inputdate='%s' group by a.`CORP_NAME`) as allcount) \
-WHERE idle.corp_name = allcount.corp_name order by countAll desc"
+WHERE idle.corp_name = allcount.corp_name"
         cursor.execute(sql % (date, date))
         # 获取查询结果
         result = cursor.fetchall()
