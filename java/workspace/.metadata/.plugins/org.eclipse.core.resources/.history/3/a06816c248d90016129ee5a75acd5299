@@ -1,0 +1,11 @@
+package com.test;
+
+
+class Anmal {
+
+	public void checkStatus() {
+
+		System.out.println("Your pet is healthy and happy!");
+
+	}
+}

@@ -1,0 +1,8 @@
+package com.test;
+import java.util.HashMap;
+
+public class Restaurant {
+	public static void main(String[] args) {
+		HashMap<Strings,Integer> restaurantMenu = HashMap<Strings, Integer>();
+	}
+}

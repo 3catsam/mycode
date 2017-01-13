@@ -1,0 +1,32 @@
+package com.test;
+import java.util.*;
+
+public class GeneralizationsD {
+	public static void main(String[] args) {
+
+		ArrayList<Integer> sports=new ArrayList<Integer>;
+
+
+		for(String sport : sports) {
+
+		}
+
+		//Major cities and the year they were founded
+		HashMap<String, Integer> majorCities = new HashMap<String, Integer>();
+
+		majorCities.put("New York", 1624);
+		majorCities.put("London", 43);
+		majorCities.put("Mexico City", 1521);
+		majorCities.put("Sao Paulo", 1554);
+
+/*
+		for () {
+
+			System.out.println(city + " was founded in " + majorCities.get(city));
+
+		}
+*/
+
+
+	}
+}

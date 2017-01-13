@@ -1,3 +1,5 @@
+
+
 public class Ternary {
 	public static void main(String[] args) {
 		
@@ -12,7 +14,7 @@ public class Ternary {
 public class Switch {
 	public static void main(String[] args) {
 		
-		char penaltyKick = 'C';
+		char penaltyKick = 'C'; 
 
 		switch (penaltyKick) {
 
