@@ -23,7 +23,7 @@ public class GeneralizationsD {
 		majorCities.put("Sao Paulo", 1554);
 
 
-		for (String city: majorCities.keySet()) {
+		for (String city:majorCities.keySet()) {
 
 			System.out.println(city + " was founded in " + majorCities.get(city));
 
